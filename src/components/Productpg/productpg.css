@@ -50,3 +50,10 @@
 .singleProduct{
     margin-top: 100px;
 }
+
+.counter{
+    background-color: #40405f;
+    display: grid;
+    place-items: center;
+    margin-top:1rem;
+}

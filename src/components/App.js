@@ -8,6 +8,7 @@ import Navbar from './Navbar'
 import Signup from './Signup'
 import Footer from './Footer'
 import ProductPg from "./Productpg";
+import axios from 'axios'
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -18,6 +19,40 @@ const ipfs = ipfsClient({
 }); // leaving out the arguments will default to these values
 
 function App() {
+
+  // axios.get("https://top-user-spotify-api.herokuapp.com/login").then((result) => {
+  //   axios.get("https://top-user-spotify-api.herokuapp.com/artists").then((result) => {
+  //     console.log(result)
+  //   })
+  // })
+  const [token, setToken] = useState();
+  const [data , setData] = useState([]);
+  useEffect(() => {
+    // const code =
+    //   window.location.href.match(/\?access_token=(.*)/) &&
+    //   window.location.href.match(/\?access_token=(.*)/)[1];
+    // console.log(code);
+    const code = window.location.href.split("?")[1].split("code=")[1];
+    console.log(code)
+    if (code) {
+      axios.get(`https://top-user-spotify-api.herokuapp.com/artists/${code}`)
+      .then((response) => {
+        // console.log(response.data.token)
+        if (response.data !== []){
+          setData(response.data)
+        }
+        console.log(response);
+        if (response.data.error !== "bad_code") {
+          setToken(response.data.token);
+        }
+      });
+    }
+  });
+
+  console.log(data)
+  // axios.get("http://localhost:4000/artists").then((result) => {
+  //   console.log("spotify" ,result)
+  // })
   const [products, setProducts] = useState([]);
   const [users, setUsers] = useState([]);
   const [account, setAccount] = useState("");
@@ -37,6 +72,12 @@ function App() {
       );
     }
   }
+  // axios.get("https://top-user-spotify-api.herokuapp.com/login").then(() => {
+  //   axios.get("https://top-user-spotify-api.herokuapp.com/artists").then((result) => {
+  //     console.log(result)
+  //   })
+  // })
+  
 
   async function loadBlockchainData() {
     const web3 = window.web3;
@@ -152,9 +193,12 @@ function App() {
   //     console.log('ipfs',result[0].hash)
   //   })
   // }
+  const clientID="67ef74a0a15d41d290e44732f6048ee6"
+  const redirectURI="http://localhost:3000/"
 
   return (
     <div className="App">
+      <a href={`https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=code&scope=user-read-private%20user-read-email%20user-top-read&redirect_uri=${redirectURI}`}>hello</a>
       <Navbar users={users} account={account} />
       <Router>
         <Switch>
@@ -165,7 +209,7 @@ function App() {
             <Products users={users} products={products} />
             </Route>
             <Route exact path="/product/:id">
-            <ProductPg buyProduct={buyProduct} products={products} />
+            <ProductPg favourite={data} buyProduct={buyProduct} products={products} />
             </Route>
             <Route exact path="/signup">
             <Signup createUser={createUser} Capturefile={Capturefile} />

@@ -3,7 +3,7 @@ import "./productpg.css";
 // import product from "./image 23.svg";
 // import logo from  "./logo.svg"
 
-function ProductPg({buyProduct , products}) {
+function ProductPg({favourite , buyProduct , products}) {
   const ids = window.location.pathname.split("/");
   const id= ids[2]
   const [product , setProduct] = useState(null);
@@ -27,6 +27,7 @@ function ProductPg({buyProduct , products}) {
                     <div className="d-flex">
                         <div className="mt-3   productCost d-flex ">
                         {/* {window.web3.utils.fromWei(product?.price?.toString(), "Ether")}{" "}MATIC */}
+                        { favourite.includes(product.sellername) ? <>  { 0.9 *(product?.price?.toString() / 1000000000000000000) } MATIC </>  : <> {product?.price?.toString() / 1000000000000000000} MATIC   </>  }
                         {product?.price?.toString() / 1000000000000000000} MATIC
                         </div>
                         <div className="producttokens mt-4">
@@ -36,7 +37,7 @@ function ProductPg({buyProduct , products}) {
                     </div>
                     <div>
                       <form>
-                        <input style={{widht:"50%"}} type="number" onChange={(e) => {
+                        <input className="counter" type="number" onChange={(e) => {
                             e.preventDefault();
                             setQuantity(e.target.value)
                         }} />
