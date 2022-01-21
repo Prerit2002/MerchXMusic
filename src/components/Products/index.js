@@ -1,5 +1,5 @@
 import {useState , useEffect} from "react";
-import Productpg from "./Productpg";
+import Productpg from "../Productpg";
 import "./products.css";
 function Products({ users , products }) {
   const ids = window.location.pathname.split("/");
@@ -7,7 +7,7 @@ function Products({ users , products }) {
   const [name , setName] = useState(null);
   console.log(users)
   useEffect(() => {
-    if(id !== undefined && users.length > 0){
+    if(id !== undefined && users?.length > 0){
       console.log(users)
       console.log(id)
       const user = users?.find(user => user.id.toString() === id)
@@ -23,12 +23,11 @@ function Products({ users , products }) {
 
   return (
     <div className="products p-5">
-
       {products?.map((product) => {
         return (
           <>
          
-           { users?.length > 0 &&  name?.toLowerCase() === product.sellername ? (
+           { users?.length > 0 &&  name?.toLowerCase() === product.sellername.toLowerCase() ? (
             <div onClick={() => {
               window.location.href = `/product/${product.Id.toString()}`;
             }}>

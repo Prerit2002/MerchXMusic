@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne&display=swap');
+.productType{
+    font-family: 'Syne', sans-serif;
+    color: white;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 50.4px;
+}
+.product{
+    font-family: 'Syne', sans-serif;
+    color: #FF2B59;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 50.4px;
+}
+
+.productCost{
+    font-family: 'Syne', sans-serif;
+    color: #F1FF4F;
+    font-size: 52px;
+    font-weight: 600;
+    line-height: 62.4px;
+}
+.producttokens{
+    width: 100px;
+    border-radius: 30px;
+    height: 35px;
+    background-color:  #FF2B59;
+}
+.tokenCredits{
+    font-family: 'Syne', sans-serif;
+    color: #F1FF4F;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 28.8px;
+}
+.buyButton{
+    border: solid 3px #F1FF4F;
+    background-color: #191926;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 28.8px;
+}
+.producttokens{
+    margin-right: auto;
+    margin-left: auto;
+}
+.singleProduct{
+    margin-top: 100px;
+}

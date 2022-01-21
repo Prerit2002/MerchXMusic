@@ -7,6 +7,7 @@ import Landing from './Landing'
 import Navbar from './Navbar'
 import Signup from './Signup'
 import Footer from './Footer'
+import ProductPg from "./Productpg";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -111,12 +112,12 @@ function App() {
       console.log(e);
     }
   };
-  const buyProduct = (productId) => {
-    console.log(account);
+  const buyProduct = (productId , quantity,price) => {
+    console.log(products[0]);
     try {
       marketplaceContract.methods
-        .buy(productId)
-        .send({ from: account })
+        .buy(productId,quantity)
+        .send({ from: account,value:price})
         .once("receipt", (receipt) => {
           console.log(receipt);
         });
@@ -163,6 +164,9 @@ function App() {
           <Route exact path="/artist/:id">
             <Products users={users} products={products} />
             </Route>
+            <Route exact path="/product/:id">
+            <ProductPg buyProduct={buyProduct} products={products} />
+            </Route>
             <Route exact path="/signup">
             <Signup createUser={createUser} Capturefile={Capturefile} />
             </Route>
@@ -186,9 +190,9 @@ function App() {
         onSubmit={(e) => {
           e.preventDefault();
           console.log("hello");
-          const a = 1;
+          const a = 0.05;
           const price = window.web3.utils.toWei(a.toString(), "Ether");
-          createProduct("tshirt", "raj", 1, price, hash);
+          createProduct("Tshirt", "Prerit Rawtani", 5, price, hash);
         }}
       >
         <input type="text" placeholder="name" />
@@ -220,7 +224,7 @@ function App() {
             <button
               onClick={(e) => {
                 e.preventDefault();
-                buyProduct(idx);
+                buyProduct(product.Id,2,product.price*2);
               }}
             >
               Buy

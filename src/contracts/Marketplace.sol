@@ -49,13 +49,11 @@ contract Marketplace {
         Product memory _product = products[_id];
         require(_product.quantity > _quantity , "Please Select less quantity");
         address payable _owner = _product.owner;
-        if ( _product.quantity > 0){
+        
             _owner.transfer(_product.price);
             _product.quantity = _product.quantity - _quantity;
-            receiptcount++;
-            receipts[receiptcount] = Receipt(receiptcount, _product.sellername,payable(msg.sender),_quantity,_product.hash);
-
-        }
+            products[_id] = _product;
+        
     }
 
 
