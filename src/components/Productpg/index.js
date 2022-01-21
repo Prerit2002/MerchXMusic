@@ -36,7 +36,7 @@ function ProductPg({buyProduct , products}) {
                     </div>
                     <div>
                       <form>
-                        <input type="number" onChange={(e) => {
+                        <input style={{widht:"50%"}} type="number" onChange={(e) => {
                             e.preventDefault();
                             setQuantity(e.target.value)
                         }} />
