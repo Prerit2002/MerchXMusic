@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne&display=swap');
+.merchandmusic{
+    font-family: 'Syne', sans-serif;
+    color: #FF2B59;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 86.4px;
+}
+.stanHeading{
+    font-family: 'Syne', sans-serif;
+    color: white;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 57.6px;
+}
+.artistHeading{
+    font-family: 'Syne', sans-serif;
+    color: #F1FF4F;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 57.6px;   
+}
+.artistName{
+    font-family: 'Syne', sans-serif;
+    color: black;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 28.8px;
+    background-color: #F1FF4F;
+    width: 203px;
+    height: 41px;
+    border-radius: 30px;
+    border-color: red;
+    margin: 15px;
+}
+.searchArtist{
+    background-color: #191926;
+    border: none;
+    border-bottom: solid #828282;
+    color: #828282;
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 57.6px; 
+}
+.artistCarousel{
+    height: 100px;
+}
+.carousel-item{
+    height: 300px;
+}
+.artistImg{
+    height: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}

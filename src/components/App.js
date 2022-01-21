@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import logo from "../logo.png";
 import "./App.css";
 import Web3 from "web3";
 import Marketplace from "../abis/Marketplace.json";
 import Products from './Products'
+import Landing from './Landing'
+import Navbar from './Navbar'
+import Signup from './Signup'
+import Footer from './Footer'
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
   host: "ipfs.infura.io",
@@ -53,7 +57,6 @@ function App() {
       //  // Load products
       for (var i = 1; i <= productCount; i++) {
         const product = await marketplace.methods.products(i).call();
-        console.log(product);
         setProducts((products) => [...products, product]);
         // setProducts( [...products, product])
       }
@@ -71,7 +74,6 @@ function App() {
       window.alert("Marketplace contract not deployed to detected network.");
     }
   }
-  console.log("a" , products[1]);
 
   useEffect(() => {
     (async () => {
@@ -80,11 +82,12 @@ function App() {
     })();
   }, []);
 
-  const createUser = (name, email, hash, artist) => {
+  const createUser = (name, email, artist , location) => {
     console.log(account);
+    console.log("hash",hash)
     try {
       marketplaceContract.methods
-        .createUser(name, email, hash, artist)
+        .createUser(name, email, hash, artist , location)
         .send({ from: account })
         .once("confirmation", (receipt) => {
           console.log(receipt);
@@ -150,12 +153,28 @@ function App() {
   // }
 
   return (
-    <div>
-      <form
+    <div className="App">
+      <Navbar users={users} account={account} />
+      <Router>
+        <Switch>
+          <Route exact path="/">
+          <Landing users={users} />
+          </Route>
+          <Route exact path="/artist/:id">
+            <Products users={users} products={products} />
+            </Route>
+            <Route exact path="/signup">
+            <Signup createUser={createUser} Capturefile={Capturefile} />
+            </Route>
+        </Switch>
+      </Router>
+      <Footer />
+      
+      {/* <form
         onSubmit={(e) => {
           e.preventDefault();
           console.log("hello");
-          createUser("Raj", "prerit715@gmail.com", hash, false);
+          createUser("ed sheeran", "prerit715@gmail.com", hash, true);
         }}
       >
         <input type="text" placeholder="name" />
@@ -209,7 +228,8 @@ function App() {
           </div>
         );
       })}
-      <Products products={products} />
+      <Products products={products} /> */}
+
     </div>
   );
 }

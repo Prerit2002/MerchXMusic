@@ -13,6 +13,7 @@ contract Marketplace {
         string name;
         string email;
         string hash;
+        string location;
         bool artist;
     }
 
@@ -34,9 +35,9 @@ contract Marketplace {
         string hash;
     }
 
-    function createUser(string memory _name , string memory _email , string memory _hash , bool _artist) public{
+    function createUser(string memory _name , string memory _email , string memory _hash , bool _artist,string memory _location) public{
         usercount++;
-        user[usercount] = User(usercount,_name,_email,_hash ,_artist);
+        user[usercount] = User(usercount,_name,_email,_hash , _location  ,_artist);
     }
     function createProduct(string memory _name , string memory _sellername , uint _quantity,uint _price,string memory _hash) public{
         productcount++;

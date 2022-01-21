@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne&display=swap');
+.mxm{
+    color: #F1FF4F;
+    font-weight: 800;
+    margin-right: 65.10416666666667vw;
+    font-family: 'Syne', sans-serif;
+    line-height: 28.8px;
+    text-decoration: none;
+}
+.mxm:hover{
+    color: #F1FF4F;
+}
+.navbar{
+    background-color: #191926;
+}
+.tokenCredits{
+    color: white;
+}
+.tokenImg{
+    width: 29px;
+    height: 29px;
+    margin-right: 7px;
+}
+.search{
+    color: #F1FF4F;
+    border-color: #F1FF4F;
+}
+.tokens{
+    border-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 30px;
+    width: 126px;
+    height: 49px;
+    padding-top: 10px;
+    margin-right: 30px;
+}
