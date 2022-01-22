@@ -85,6 +85,7 @@ function LandingPage({ users }) {
                         <img src={`https://ipfs.infura.io/ipfs/${users[1]?.hash}`} className="d-block w-25  artistImg" alt="..." style={{borderRadius:"2rem"}}  />
                     </div> */}
           {searchResults?.map((user,idx) => {
+            console.log(user)
             return (
                 <div onClick={() => {
                     window.location.href = `artist/${user.id}`;

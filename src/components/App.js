@@ -9,6 +9,7 @@ import Signup from './Signup'
 import Footer from './Footer'
 import ProductPg from "./Productpg";
 import axios from 'axios'
+import AddProduct from "./AddProduct"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -28,12 +29,12 @@ function App() {
   const [token, setToken] = useState();
   const [data , setData] = useState([]);
   useEffect(() => {
-    // const code =
-    //   window.location.href.match(/\?access_token=(.*)/) &&
-    //   window.location.href.match(/\?access_token=(.*)/)[1];
-    // console.log(code);
-    const code = window.location.href.split("?")[1].split("code=")[1];
-    console.log(code)
+    const code =
+      window.location.href.match(/\?code=(.*)/) &&
+      window.location.href.match(/\?code=(.*)/)[1];
+    console.log(code);
+    // const code = window.location.href.split("?")[1].split("code=")[1];
+    // console.log(code)
     if (code) {
       axios.get(`https://top-user-spotify-api.herokuapp.com/artists/${code}`)
       .then((response) => {
@@ -59,6 +60,8 @@ function App() {
   const [marketplaceContract, setMarketplace] = useState();
   const [buffer, setBuffer] = useState(null);
   const [hash, setHash] = useState("");
+  const [receipts , setReceipt] = useState([])
+  const [coins , setCoins] = useState()
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -108,6 +111,20 @@ function App() {
         const user = await marketplace.methods.user(i).call();
 
         setUsers((users) => [...users, user]);
+        console.log(parseInt(user.coins))
+        if(user.user === accounts[0]){
+          setCoins(parseInt(user.coins))
+        }
+      }
+      
+      const receiptcount = await marketplace.methods.receiptcount().call();
+      // Load users
+      for (i = 1; i <= receiptcount; i++) {
+        const receipt = await marketplace.methods.receipts(i).call();
+        
+        setReceipt((receipts) => [...receipts, receipt]);
+
+        // setUsers((users) => [...users, receipt]);
       }
 
       // this.setState({loading:false})
@@ -116,6 +133,7 @@ function App() {
       window.alert("Marketplace contract not deployed to detected network.");
     }
   }
+  console.log("coins",coins)
 
   useEffect(() => {
     (async () => {
@@ -139,7 +157,7 @@ function App() {
       console.log(e);
     }
   };
-  const createProduct = (name, sellername, quantity, price, hash) => {
+  const createProduct = (name, sellername, quantity, price) => {
     console.log(account);
     try {
       marketplaceContract.methods
@@ -185,6 +203,20 @@ function App() {
       });
     };
   };
+  console.log("produts" , products)
+
+  const buyMM = (productId , quantity) => {
+    try {
+      marketplaceContract.methods
+        .buyMM(productId,quantity)
+        .send({ from: account})
+        .once("receipt", (receipt) => {
+          console.log(receipt);
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   // const addFile = async (e) => {
   //   e.preventDefault();
@@ -198,10 +230,12 @@ function App() {
 
   return (
     <div className="App">
-      <a href={`https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=code&scope=user-read-private%20user-read-email%20user-top-read&redirect_uri=${redirectURI}`}>hello</a>
-      <Navbar users={users} account={account} />
+      <a href={`https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=code&scope=user-read-private%20user-read-email%20user-top-read&redirect_uri=${redirectURI}`}>Login With Spotify</a>
       <Router>
+      <Navbar coins={coins} />
         <Switch>
+      
+      
           <Route exact path="/">
           <Landing users={users} />
           </Route>
@@ -209,7 +243,10 @@ function App() {
             <Products users={users} products={products} />
             </Route>
             <Route exact path="/product/:id">
-            <ProductPg favourite={data} buyProduct={buyProduct} products={products} />
+            <ProductPg favourite={data} buyProduct={buyProduct} buyMM={buyMM} coins={coins} products={products} />
+            </Route>
+            <Route exact path="/addproduct">
+            <AddProduct createProduct={createProduct} Capturefile={Capturefile}  />
             </Route>
             <Route exact path="/signup">
             <Signup createUser={createUser} Capturefile={Capturefile} />

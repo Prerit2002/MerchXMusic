@@ -3,7 +3,7 @@ import "./productpg.css";
 // import product from "./image 23.svg";
 // import logo from  "./logo.svg"
 
-function ProductPg({favourite , buyProduct , products}) {
+function ProductPg({favourite , buyProduct, buyMM , coins , products}) {
   const ids = window.location.pathname.split("/");
   const id= ids[2]
   const [product , setProduct] = useState(null);
@@ -27,17 +27,18 @@ function ProductPg({favourite , buyProduct , products}) {
                     <div className="d-flex">
                         <div className="mt-3   productCost d-flex ">
                         {/* {window.web3.utils.fromWei(product?.price?.toString(), "Ether")}{" "}MATIC */}
-                        { favourite.includes(product.sellername) ? <>  { 0.9 *(product?.price?.toString() / 1000000000000000000) } MATIC </>  : <> {product?.price?.toString() / 1000000000000000000} MATIC   </>  }
-                        {product?.price?.toString() / 1000000000000000000} MATIC
+                        { favourite.includes(product?.sellername) ? <>  { 0.9 *(product?.price?.toString() / 1000000000000000000) } MATIC </>  : <> {product?.price?.toString() / 1000000000000000000} MATIC   </>  }
+                        {/* {product?.price?.toString() / 1000000000000000000} MATIC */}
                         </div>
                         <div className="producttokens mt-4">
-                            <span className="tokenCredits ms-2">50</span>
+                            <span className="tokenCredits ms-2">10 MM</span>
                             {/* <img className="tokenImg" src={logo}></img> */}
                         </div>
                     </div>
                     <div>
-                      <form>
-                        <input className="counter" type="number" onChange={(e) => {
+                      <form className="d-flex">
+                        <h4 className="mt-3 pr-2" style={{color: "white"}}>Select Quantity</h4>
+                        <input className="counter " type="number" onChange={(e) => {
                             e.preventDefault();
                             setQuantity(e.target.value)
                         }} />
@@ -48,6 +49,19 @@ function ProductPg({favourite , buyProduct , products}) {
                             e.preventDefault(); 
                             buyProduct(product.Id,quantity,product.price*quantity)
                         }} className="buyButton ps-2 pe-2 pt-1 pb-1">Buy Now</button>
+                        { coins >= 10 ? 
+                        <>
+                        <p style={{ color: "white" }}>
+                        OR
+                        </p>
+                       
+                         <button onClick={(e) => {
+                            e.preventDefault(); 
+                            buyMM(product.Id,quantity)
+                        }} className="buyButton ps-2 pe-2 pt-1 pb-1">Buy With MM</button>
+                        </>
+                        
+                    :null}
                     </div>
                 </div>
             </div>
