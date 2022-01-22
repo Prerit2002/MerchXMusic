@@ -10,6 +10,7 @@ import Footer from './Footer'
 import ProductPg from "./Productpg";
 import axios from 'axios'
 import AddProduct from "./AddProduct"
+import Nft from "./Nfts"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 const ipfsClient = require("ipfs-http-client");
 const ipfs = ipfsClient({
@@ -18,6 +19,16 @@ const ipfs = ipfsClient({
   protocol: "https",
   apiPath: "/ipfs/api/v0",
 }); // leaving out the arguments will default to these values
+// const { create } = require("ipfs-http-client");
+// import * as IPFS from 'ipfs-core'
+
+// const ipfs = IPFS.create({
+//   host: "ipfs.infura.io",
+//   port: 5001,
+//   protocol: "https",
+//   path: "api/v0",
+// });
+
 
 function App() {
 
@@ -41,6 +52,7 @@ function App() {
         // console.log(response.data.token)
         if (response.data !== []){
           setData(response.data)
+          localStorage.setItem("favourites", JSON.stringify(response.data))
         }
         console.log(response);
         if (response.data.error !== "bad_code") {
@@ -49,8 +61,9 @@ function App() {
       });
     }
   });
+  console.log(localStorage.getItem("favourites"))
 
-  console.log(data)
+  // console.log(data)
   // axios.get("http://localhost:4000/artists").then((result) => {
   //   console.log("spotify" ,result)
   // })
@@ -62,6 +75,7 @@ function App() {
   const [hash, setHash] = useState("");
   const [receipts , setReceipt] = useState([])
   const [coins , setCoins] = useState()
+  const [tokens , setTokens] = useState([]);
 
   async function loadWeb3() {
     if (window.ethereum) {
@@ -127,6 +141,16 @@ function App() {
         // setUsers((users) => [...users, receipt]);
       }
 
+      const tokencount = await marketplace.methods.tokenuri().call();
+
+      console.log("tokencount", tokencount)
+      for (i = 1; i <= tokencount; i++) {
+        const token = await marketplace.methods.tokens(i).call();
+        console.log(token)
+        setTokens((tokens) => [...tokens, token]);
+      }
+
+
       // this.setState({loading:false})
       // console.log(products)
     } else {
@@ -185,6 +209,17 @@ function App() {
     }
   };
 
+  const createToken = (e) => {
+    e.preventDefault();
+    try{
+      marketplaceContract.methods.createToken(hash).send({from:account}).once("receipt", (receipt) => {
+        console.log(receipt);
+      })
+    }catch (e) {
+      console.log(e)
+    }
+  }
+
   const Capturefile =  (e) => {
     e.preventDefault();
     const file = e.target.files[0];
@@ -200,10 +235,65 @@ function App() {
         }
         setHash(result[0].hash);
         console.log(result[0].hash);
+       
       });
     };
   };
   console.log("produts" , products)
+
+  const mineNft = (uri) => {
+    console.log(uri)
+    marketplaceContract.methods.createCollectibles(uri).send({from:account}).once("receipt", (receipt) => {
+      console.log(receipt);
+    })
+  }
+
+  const addNft = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    const reader = new window.FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onloadend = async () => {
+      await setBuffer(Buffer.from(reader.result));
+      await ipfs.add(Buffer.from(reader.result), async (error, result) => {
+        //  this.setState({hash: result[0].hash})
+        if (error) {
+          console.error(error);
+          return;
+        }
+        setHash(result[0].hash);
+        console.log(result[0].hash);
+        const uploadedImageUrl = `https://ipfs.infura.io/ipfs/${result[0].hash}`;
+      const metadata = {
+        name: "example name",
+        description: "example description",
+        image: uploadedImageUrl,
+      };
+      const encodedJsonObject = Buffer.from(JSON.stringify(metadata));
+      
+      console.log(typeof(encodedJsonObject))
+      const metadataRes = await ipfs.add(encodedJsonObject);
+      console.log(metadataRes[0].hash)
+      setHash(metadataRes[0].hash)
+       
+      });
+      
+
+    };
+
+    
+    // const url = await ipfs.add(file);
+    // const uploadedImageUrl = `https://ipfs.infura.io/ipfs/${url?.path}`;
+
+    //2 ADD Metadata to IPFS
+   
+    // const metaDataUrl = `https://ipfs.infura.io/ipfs/${metadataRes?.path}`;
+    //   console.log(metaDataUrl);
+
+     
+    
+
+  }
 
   const buyMM = (productId , quantity) => {
     try {
@@ -225,12 +315,17 @@ function App() {
   //     console.log('ipfs',result[0].hash)
   //   })
   // }
+  console.log("")
+  // console.log(https://ipfs.infura.io/ipfs/tokens[0])
+  axios.get("https://ipfs.infura.io/ipfs/QmWmKKj3k7du4VoJXzAcWP6e1XqZVuFJXZiPKBT3fpbTXn").then((result) => [
+    console.log(result)
+  ])
   const clientID="67ef74a0a15d41d290e44732f6048ee6"
   const redirectURI="http://localhost:3000/"
 
   return (
     <div className="App">
-      <a href={`https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=code&scope=user-read-private%20user-read-email%20user-top-read&redirect_uri=${redirectURI}`}>Login With Spotify</a>
+      {/* <a href={`https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=code&scope=user-read-private%20user-read-email%20user-top-read&redirect_uri=${redirectURI}`}>Login With Spotify</a> */}
       <Router>
       <Navbar coins={coins} />
         <Switch>
@@ -247,6 +342,9 @@ function App() {
             </Route>
             <Route exact path="/addproduct">
             <AddProduct createProduct={createProduct} Capturefile={Capturefile}  />
+            </Route>
+            <Route exact path="/nft">
+            <Nft tokens={tokens} mineNft={mineNft}/>
             </Route>
             <Route exact path="/signup">
             <Signup createUser={createUser} Capturefile={Capturefile} />
@@ -314,6 +412,24 @@ function App() {
         );
       })}
       <Products products={products} /> */}
+      {/* <form>
+        <input type="file" onChange={addNft} />
+        <button onClick={(e) => {
+          e.preventDefault()
+          createToken(e);
+
+
+        }}>create</button>
+      </form>
+      {tokens.map((token) => {
+        return(
+          <div>
+
+
+            <h1></h1>
+          </div>
+        )
+      })} */}
 
     </div>
   );

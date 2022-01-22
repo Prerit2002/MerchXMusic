@@ -1,12 +1,38 @@
 pragma solidity ^0.8.4;
 
-contract Marketplace {  
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+contract Marketplace is ERC721URIStorage {  
     uint public productcount = 0;
     uint public usercount = 0;
     uint public receiptcount = 0;
+    uint public tokenuri = 0;
     mapping(uint => Product) public products;
     mapping(uint => User)public user;
     mapping(uint => Receipt)public receipts;
+    mapping(uint => Token)public tokens;
+
+    struct Token{
+        uint ids;
+        string hash;
+    }
+
+
+
+    uint public tokencounter;
+    constructor() public ERC721("Marketplace", "MPT") {
+        tokencounter = 0;
+    }
+
+    function createCollectibles(string memory tokenURI) public returns (uint256){
+        uint256 newItemId = tokencounter;
+        _safeMint(msg.sender, newItemId);
+        _setTokenURI(newItemId, tokenURI);
+        tokencounter++;
+        return newItemId;
+    }
 
     struct User {
         uint id;
@@ -45,15 +71,21 @@ contract Marketplace {
         productcount++;
         products[productcount] = Product(productcount,_name,_sellername,_quantity,_price,payable(msg.sender),_hash);
     }
+    function createToken(string memory _hash) public {
+        tokenuri++;
+        tokens[tokenuri] = Token(tokenuri,_hash);
+    }
 
-    function buy(uint _id, uint _quantity) payable public {
+    function buy(uint _id, uint _quantity ) payable public {
        
         Product memory _product = products[_id];
         require(_product.quantity > _quantity , "Please Select less quantity");
         address payable _owner = _product.owner;
-        
-            _owner.transfer(_product.price);
-            _product.quantity = _product.quantity - _quantity;
+      
+             _owner.transfer(msg.value);
+
+       
+         _product.quantity = _product.quantity - _quantity;
             products[_id] = _product;
             receiptcount++;
             receipts[receiptcount] = Receipt(receiptcount,_product.sellername,payable(msg.sender),_quantity,_product.hash);

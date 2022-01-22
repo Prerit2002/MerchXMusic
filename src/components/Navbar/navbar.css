@@ -2,7 +2,7 @@
 .mxm{
     color: #F1FF4F;
     font-weight: 800;
-    margin-right: 65.10416666666667vw;
+    /* margin-right: 40vw; */
     font-family: 'Syne', sans-serif;
     line-height: 28.8px;
     text-decoration: none;
@@ -37,6 +37,8 @@
 }
 
 .heading{
+    white-space: nowrap;
+    margin-top: 20px;
     font-size: 1.5vw;
     color: #F1FF4F;
     font-family: 'Syne', sans-serif;
