@@ -48,7 +48,7 @@ function LandingPage({ users }) {
                 {idx < 10 ? (
                   <button onClick={() => {
                       window.location.href = `artist/${user.id}`;
-                  }} className="artistName">{user.name}</button>
+                  }} className="artistName">  {user.name}</button>
                 ) : null}
               </>
             );

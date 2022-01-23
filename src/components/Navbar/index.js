@@ -21,6 +21,9 @@ function Navbar({coins}) {
 
                     </div>
                     <div className="d-flex">
+                        <Link to="/nft">
+                            <button className="artistName">NFT'S</button>
+                        </Link>
                     <a href={`https://accounts.spotify.com/authorize?client_id=${clientID}&response_type=code&scope=user-read-private%20user-read-email%20user-top-read&redirect_uri=${redirectURI}`} >
                     <button className="artistName" style={{whiteSpace:"nowrap"}} >Login to Spotify</button>
                     </a>

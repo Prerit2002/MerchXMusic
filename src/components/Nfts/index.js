@@ -14,6 +14,7 @@ function Nft({tokens , mineNft}) {
 
   return (
       <div>
+          <h1 style={{ color: "white" }}>Mint NFTS</h1>
           {data?.map((dataa,idx) => {
               return(
                   <div>

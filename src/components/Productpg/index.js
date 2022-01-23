@@ -31,7 +31,7 @@ function ProductPg({favourite , buyProduct, buyMM , coins , products}) {
                     <div className="d-flex">
                         <div className="mt-3   productCost d-flex ">
                         {/* {window.web3.utils.fromWei(product?.price?.toString(), "Ether")}{" "}MATIC */}
-                        { fav.includes(product?.sellername) ? <>  { 9*(product?.price?.toString() / 10000000000000000000) } MATIC </>  : <> {product?.price?.toString() / 1000000000000000000} MATIC   </>  }
+                        { fav.includes(product?.sellername) ? <> <h1 style={{marginRight:"1rem",textDecoration:"line-through"}} className="productCost">{product?.price?.toString() / 1000000000000000000} </h1>  { 9*(product?.price?.toString() / 10000000000000000000) } MATIC </>  : <> {product?.price?.toString() / 1000000000000000000} MATIC   </>  }
                         {/* {product?.price?.toString() / 1000000000000000000} MATIC */}
                         </div>
                         <div className="producttokens mt-4">

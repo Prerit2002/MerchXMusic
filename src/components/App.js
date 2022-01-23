@@ -201,8 +201,9 @@ function App() {
       marketplaceContract.methods
         .buy(productId,quantity)
         .send({ from: account,value:price})
-        .once("receipt", (receipt) => {
+        .once("confirmation", (receipt) => {
           console.log(receipt);
+          window.location.reload();
         });
     } catch (e) {
       console.log(e);
@@ -212,8 +213,9 @@ function App() {
   const createToken = (e) => {
     e.preventDefault();
     try{
-      marketplaceContract.methods.createToken(hash).send({from:account}).once("receipt", (receipt) => {
+      marketplaceContract.methods.createToken(hash).send({from:account}).once("confirmation", (receipt) => {
         console.log(receipt);
+        window.location.reload();
       })
     }catch (e) {
       console.log(e)
@@ -300,8 +302,9 @@ function App() {
       marketplaceContract.methods
         .buyMM(productId,quantity)
         .send({ from: account})
-        .once("receipt", (receipt) => {
+        .once("confirmation", (receipt) => {
           console.log(receipt);
+          window.location.reload();
         });
     } catch (e) {
       console.log(e);
